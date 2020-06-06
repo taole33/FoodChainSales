@@ -16,21 +16,11 @@ tki.geometry('500x400')
 tki.title('対象の飲食チェーンを選択')
 
 
-
-def food_chain_graph():
-    combo_get = combo.get()
-    combo_get2 = combo2.get()
+def get_sales(combo_get):
     selected_number = chain_dict[combo_get]
-    selected_number2 = chain_dict[combo_get2]
     sales = []
-    sales2 = []
     td = tr[selected_number].find_all('td')
     td_length = len(td)
-    td2 = tr[selected_number2].find_all('td')
-    td_length2 = len(td)
-    months = ['1','2','3','4','5','6','7','8','9','10','11','12']
-    
-
     for i in range(0,td_length,1):
         sales_independ = td[0+i]
         sales_independ = sales_independ.text
@@ -39,46 +29,34 @@ def food_chain_graph():
         else:
             sales_independ = None
         sales.append(sales_independ)
-    
-    for i in range(0,td_length2,1):
-        sales_independ2 = td2[0+i]
-        sales_independ2 = sales_independ2.text
-        if not sales_independ2 == '\xa0':
-            sales_independ2 = float(sales_independ2) 
-        else:
-            sales_independ2 = None
-        sales2.append(sales_independ2)
-
     if not td_length ==12:
         td_length = 12 - td_length
         for i in range(0,td_length,1):
             sales.append(None)
-
-    if not td_length2 ==12:
-        td_length2 = 12 - td_length2
-        for i in range(0,td_length2,1):
-            sales2.append(None)
+    return sales
 
 
+def food_chain_graph():
+    combo_get = combo.get()
+    combo_get2 = combo2.get()
+    sales = get_sales(combo_get)
+    sales2 = get_sales(combo_get2)
     print(sales)
-
-
-    fig = plt.figure(figsize=(12,8))
+    months = ['1','2','3','4','5','6','7','8','9','10','11','12']
+    fig = plt.figure(figsize=(8,4))
     ax1 = fig.add_subplot(111)
     ax2 = fig.add_subplot(111)
     ax3 = fig.add_subplot(111)
     ax1.plot(months,sales,label=combo_get,marker='o')
     ax2.plot(months,sales2,label=combo_get2,marker='o')
     ax3.plot(months,[100,100,100,100,100,100,100,100,100,100,100,100])
-
-    #plt.plot(months,sales,marker="o")
-    #plt.title('チェーン店　対前年同月比推移')
-    #plt.xlabel('月')
-    #plt.ylabel('売上'')
+    
+    plt.title('チェーン店　対前年同月比推移')
+    plt.xlabel('月')
+    plt.ylabel('売上対前年比（％）')
     plt.legend()
 
-   #plt.ylim(ymax=150)
-    #plt.ylim(ymin=40)
+    plt.legend()
     plt.show()
 
 
